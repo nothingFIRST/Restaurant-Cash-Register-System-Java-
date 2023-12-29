@@ -1,0 +1,124 @@
+import java.util.ArrayList;
+import java.util.List;
+
+// Класс для представления блюда
+class Dish {
+    private int dishId;
+    private String name;
+    private List<Ingredient> ingredients;
+    private double price;
+
+    public Dish(int dishId, String name, List<Ingredient> ingredients, double price) {
+        this.dishId = dishId;
+        this.name = name;
+        this.ingredients = ingredients;
+        this.price = price;
+    }
+
+    // Геттеры и сеттеры
+}
+
+// Класс для представления ингредиента
+class Ingredient {
+    private int ingredientId;
+    private String name;
+    private int quantity;
+
+    public Ingredient(int ingredientId, String name, int quantity) {
+        this.ingredientId = ingredientId;
+        this.name = name;
+        this.quantity = quantity;
+    }
+
+    // Геттеры и сеттеры
+}
+
+// Класс для представления заказа
+class Order {
+    private int orderId;
+    private List<Dish> dishes;
+    private String status;
+
+    public Order(int orderId) {
+        this.orderId = orderId;
+        this.dishes = new ArrayList<>();
+        this.status = "Новый";
+    }
+
+    // Метод для добавления блюда в заказ
+    public void addDish(Dish dish) {
+        this.dishes.add(dish);
+    }
+
+    // Метод для изменения состава заказа
+    public void editOrder(List<Dish> newDishes) {
+        this.dishes = newDishes;
+    }
+
+    // Метод для изменения статуса заказа
+    public void updateStatus(String newStatus) {
+        this.status = newStatus;
+    }
+
+    // Геттеры
+}
+
+// Класс для управления заказами
+class OrderManager {
+    private List<Order> orders;
+
+    public OrderManager() {
+        this.orders = new ArrayList<>();
+    }
+
+    // Метод для создания нового заказа
+    public Order createOrder(int orderId) {
+        Order order = new Order(orderId);
+        this.orders.add(order);
+        return order;
+    }
+
+    // Метод для добавления блюда в заказ
+    public void addDishToOrder(Order order, Dish dish) {
+        order.addDish(dish);
+    }
+
+    // Метод для изменения состава заказа
+    public void editOrder(Order order, List<Dish> newDishes) {
+        order.editOrder(newDishes);
+    }
+
+    // Метод для изменения количества блюд в заказе
+    public void updateDishQuantity(Order order, Dish dish, int newQuantity) {
+        // Найдем блюдо в заказе
+        for (Dish existingDish : order.getDishes()) {
+            if (existingDish.equals(dish)) {
+                // Обновим количество блюда
+                existingDish.setQuantity(newQuantity);
+                break;
+            }
+        }
+    }
+
+    // Метод для расчета общей суммы заказа
+    public double calculateTotal(Order order) {
+        double total = 0;
+        for (Dish dish : order.getDishes()) {
+            total += dish.getPrice() * dish.getQuantity();
+        }
+        return total;
+    }
+
+    // Метод для формирования чека
+    public String generateReceipt(Order order) {
+        StringBuilder receipt = new StringBuilder();
+        receipt.append("Заказ №").append(order.getOrderId()).append("\n");
+        for (Dish dish : order.getDishes()) {
+            receipt.append(dish.getName()).append(" x ").append(dish.getQuantity()).append(" - ").append(dish.getPrice() * dish.getQuantity()).append(" руб.\n");
+        }
+        receipt.append("Итого: ").append(calculateTotal(order)).append(" руб.");
+        return receipt.toString();
+    }
+
+    // Геттеры
+}
